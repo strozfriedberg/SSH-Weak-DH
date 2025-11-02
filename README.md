@@ -9,12 +9,12 @@ Please be aware that this tool tests a limited set of configurations, which
 might result in some weak configurations going undetected. Additionally, the
 server might block connections before the scan finishes.
 
-For further information about our tool, visit
-[https://www.aon.com/cyber-solutions/aon_cyber_labs/ssh-weak-diffie-hellman-group-identification-tool/](https://www.aon.com/cyber-solutions/aon_cyber_labs/ssh-weak-diffie-hellman-group-identification-tool/).
-
 Consult the [Logjam info page](https://weakdh.org/sysadmin.html) for
 suggestions on how to configure SSH servers to protect them as well as their
 clients from attacks exploiting DH key exchanges using a weak group.
+
+For the original blog post, visit
+[https://blog.gdssecurity.com/labs/2015/8/3/ssh-weak-diffie-hellman-group-identification-tool.html](https://web.archive.org/web/20220107152429/http://blog.gdssecurity.com/labs/2015/8/3/ssh-weak-diffie-hellman-group-identification-tool.html).
 
 # Installation
 
