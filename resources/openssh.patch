@@ -1,9 +1,7 @@
-Common subdirectories: openssh-9.8p1.orig/contrib and openssh-9.8p1/contrib
-Common subdirectories: openssh-9.8p1.orig/.github and openssh-9.8p1/.github
-diff -u openssh-9.8p1.orig/kex.c openssh-9.8p1/kex.c
---- openssh-9.8p1.orig/kex.c	2024-07-25 14:35:24.641435069 -0400
-+++ openssh-9.8p1/kex.c	2024-07-25 14:56:08.026930058 -0400
-@@ -860,6 +860,8 @@
+diff -ru openssh-10.2p1.orig/kex.c openssh-10.2p1/kex.c
+--- openssh-10.2p1.orig/kex.c	2026-01-18 10:27:10.574113770 -0500
++++ openssh-10.2p1/kex.c	2026-01-18 10:28:05.624508547 -0500
+@@ -857,6 +857,8 @@
  static int
  choose_kex(struct kex *k, char *client, char *server)
  {
@@ -12,7 +10,7 @@ diff -u openssh-9.8p1.orig/kex.c openssh-9.8p1/kex.c
  	k->name = match_list(client, server, NULL);
  
  	debug("kex: algorithm: %s", k->name ? k->name : "(no match)");
-@@ -872,6 +874,7 @@
+@@ -869,6 +871,7 @@
  	k->kex_type = kex_type_from_name(k->name);
  	k->hash_alg = kex_hash_from_name(k->name);
  	k->ec_nid = kex_nid_from_name(k->name);
@@ -20,9 +18,9 @@ diff -u openssh-9.8p1.orig/kex.c openssh-9.8p1/kex.c
  	return 0;
  }
  
-diff -u openssh-9.8p1.orig/kexgen.c openssh-9.8p1/kexgen.c
---- openssh-9.8p1.orig/kexgen.c	2024-07-25 14:35:24.641435069 -0400
-+++ openssh-9.8p1/kexgen.c	2024-07-25 14:52:57.925432708 -0400
+diff -ru openssh-10.2p1.orig/kexgen.c openssh-10.2p1/kexgen.c
+--- openssh-10.2p1.orig/kexgen.c	2026-01-18 10:27:10.574677064 -0500
++++ openssh-10.2p1/kexgen.c	2026-01-18 10:28:05.625041682 -0500
 @@ -108,7 +108,22 @@
  	case KEX_DH_GRP14_SHA256:
  	case KEX_DH_GRP16_SHA512:
@@ -47,9 +45,9 @@ diff -u openssh-9.8p1.orig/kexgen.c openssh-9.8p1/kexgen.c
  		break;
  	case KEX_ECDH_SHA2:
  		r = kex_ecdh_keypair(kex);
-diff -u openssh-9.8p1.orig/kexgexc.c openssh-9.8p1/kexgexc.c
---- openssh-9.8p1.orig/kexgexc.c	2024-07-25 14:35:24.641435069 -0400
-+++ openssh-9.8p1/kexgexc.c	2024-07-25 15:00:23.535476566 -0400
+diff -ru openssh-10.2p1.orig/kexgexc.c openssh-10.2p1/kexgexc.c
+--- openssh-10.2p1.orig/kexgexc.c	2026-01-18 10:27:10.574773561 -0500
++++ openssh-10.2p1/kexgexc.c	2026-01-18 10:28:05.625341825 -0500
 @@ -65,11 +65,12 @@
  
  	nbits = dh_estimate(kex->dh_need * 8);
@@ -107,23 +105,21 @@ diff -u openssh-9.8p1.orig/kexgexc.c openssh-9.8p1/kexgexc.c
  	/* generate and send 'e', client DH public key */
  	if ((r = dh_gen_key(kex->dh, kex->we_need * 8)) != 0)
  		goto out;
-Common subdirectories: openssh-9.8p1.orig/m4 and openssh-9.8p1/m4
-Common subdirectories: openssh-9.8p1.orig/openbsd-compat and openssh-9.8p1/openbsd-compat
-diff -u openssh-9.8p1.orig/readconf.c openssh-9.8p1/readconf.c
---- openssh-9.8p1.orig/readconf.c	2024-07-25 14:35:24.648435637 -0400
-+++ openssh-9.8p1/readconf.c	2024-07-25 14:46:14.555306183 -0400
-@@ -70,6 +70,7 @@
- #include "uidswap.h"
+diff -ru openssh-10.2p1.orig/readconf.c openssh-10.2p1/readconf.c
+--- openssh-10.2p1.orig/readconf.c	2026-01-18 10:27:10.581613535 -0500
++++ openssh-10.2p1/readconf.c	2026-01-18 10:43:26.543969000 -0500
+@@ -65,6 +65,7 @@
  #include "myproposal.h"
  #include "digest.h"
+ #include "version.h"
 +#include "dh.h"
  
  /* Format of the configuration file:
  
-@@ -2644,6 +2645,10 @@
- 	options->tag = NULL;
+@@ -2802,6 +2803,10 @@
  	options->channel_timeouts = NULL;
  	options->num_channel_timeouts = 0;
+ 	options->version_addendum = NULL;
 +        /* Default values taken from dh.h */
 +        options->dh_minbits = DH_GRP_MIN;
 +        options->dh_nbits = 0;
@@ -131,11 +127,11 @@ diff -u openssh-9.8p1.orig/readconf.c openssh-9.8p1/readconf.c
  }
  
  /*
-diff -u openssh-9.8p1.orig/readconf.h openssh-9.8p1/readconf.h
---- openssh-9.8p1.orig/readconf.h	2024-07-25 14:35:24.648435637 -0400
-+++ openssh-9.8p1/readconf.h	2024-07-25 14:45:04.590472568 -0400
-@@ -186,6 +186,11 @@
- 	u_int	num_channel_timeouts;
+diff -ru openssh-10.2p1.orig/readconf.h openssh-10.2p1/readconf.h
+--- openssh-10.2p1.orig/readconf.h	2026-01-18 10:27:10.581678932 -0500
++++ openssh-10.2p1/readconf.h	2026-01-18 10:28:05.627038178 -0500
+@@ -189,6 +189,11 @@
+ 	char	*version_addendum;
  
  	char	*ignored_unknown; /* Pattern list of unknown tokens to ignore */
 +
@@ -146,11 +142,10 @@ diff -u openssh-9.8p1.orig/readconf.h openssh-9.8p1/readconf.h
  }       Options;
  
  #define SSH_PUBKEY_AUTH_NO	0x00
-Common subdirectories: openssh-9.8p1.orig/regress and openssh-9.8p1/regress
-diff -u openssh-9.8p1.orig/ssh.c openssh-9.8p1/ssh.c
---- openssh-9.8p1.orig/ssh.c	2024-07-25 14:35:24.662436773 -0400
-+++ openssh-9.8p1/ssh.c	2024-07-25 14:44:24.826702246 -0400
-@@ -174,6 +174,21 @@
+diff -ru openssh-10.2p1.orig/ssh.c openssh-10.2p1/ssh.c
+--- openssh-10.2p1.orig/ssh.c	2026-01-18 10:27:10.594983982 -0500
++++ openssh-10.2p1/ssh.c	2026-01-18 10:28:05.627487180 -0500
+@@ -171,6 +171,21 @@
  extern int muxserver_sock;
  extern u_int muxclient_command;
  
@@ -172,15 +167,15 @@ diff -u openssh-9.8p1.orig/ssh.c openssh-9.8p1/ssh.c
  /* Prints a help message to the user.  This function never returns. */
  
  static void
-@@ -681,6 +696,7 @@
- 	size_t n, len;
+@@ -700,6 +715,7 @@
  	u_int j;
+ 	struct utsname utsname;
  	struct ssh_conn_info *cinfo = NULL;
 +	char *subopts, *value;
  
  	/* Ensure that fds 0, 1 and 2 are open or directed to /dev/null */
  	sanitise_stdfd();
-@@ -745,7 +761,7 @@
+@@ -765,7 +781,7 @@
  	argv0 = av[0];
  
   again:
@@ -189,7 +184,7 @@ diff -u openssh-9.8p1.orig/ssh.c openssh-9.8p1/ssh.c
  	    "AB:CD:E:F:GI:J:KL:MNO:P:Q:R:S:TVw:W:XYy")) != -1) { /* HUZdhjruz */
  		switch (opt) {
  		case '1':
-@@ -1098,6 +1114,31 @@
+@@ -1120,6 +1136,31 @@
  		case 'F':
  			config = optarg;
  			break;
@@ -221,11 +216,11 @@ diff -u openssh-9.8p1.orig/ssh.c openssh-9.8p1/ssh.c
  		default:
  			usage();
  		}
-diff -u openssh-9.8p1.orig/sshconnect2.c openssh-9.8p1/sshconnect2.c
---- openssh-9.8p1.orig/sshconnect2.c	2024-07-25 14:35:24.663436854 -0400
-+++ openssh-9.8p1/sshconnect2.c	2024-07-25 14:37:58.318542429 -0400
-@@ -276,6 +276,11 @@
- 	ssh->kex->kex[KEX_KEM_SNTRUP761X25519_SHA512] = kex_gen_client;
+diff -ru openssh-10.2p1.orig/sshconnect2.c openssh-10.2p1/sshconnect2.c
+--- openssh-10.2p1.orig/sshconnect2.c	2026-01-18 10:27:10.595650396 -0500
++++ openssh-10.2p1/sshconnect2.c	2026-01-18 10:28:05.628189062 -0500
+@@ -277,6 +277,11 @@
+ 	ssh->kex->kex[KEX_KEM_MLKEM768X25519_SHA256] = kex_gen_client;
  	ssh->kex->verify_host_key=&verify_host_key_callback;
  
 +	/* Take key bit parameters from command line. */
@@ -236,7 +231,7 @@ diff -u openssh-9.8p1.orig/sshconnect2.c openssh-9.8p1/sshconnect2.c
  	ssh_dispatch_run_fatal(ssh, DISPATCH_BLOCK, &ssh->kex->done);
  	kex_proposal_free_entries(myproposal);
  
-@@ -476,6 +481,7 @@
+@@ -477,6 +482,7 @@
  
  	if (!authctxt.success)
  		fatal("Authentication failed.");
@@ -244,7 +239,7 @@ diff -u openssh-9.8p1.orig/sshconnect2.c openssh-9.8p1/sshconnect2.c
  	if (ssh_packet_connection_is_on_socket(ssh)) {
  		verbose("Authenticated to %s ([%s]:%d) using \"%s\".", host,
  		    ssh_remote_ipaddr(ssh), ssh_remote_port(ssh),
-@@ -484,6 +490,7 @@
+@@ -485,6 +491,7 @@
  		verbose("Authenticated to %s (via proxy) using \"%s\".", host,
  		    authctxt.method->name);
  	}
@@ -252,10 +247,10 @@ diff -u openssh-9.8p1.orig/sshconnect2.c openssh-9.8p1/sshconnect2.c
  }
  
  static int
-diff -u openssh-9.8p1.orig/sshconnect.c openssh-9.8p1/sshconnect.c
---- openssh-9.8p1.orig/sshconnect.c	2024-07-25 14:35:24.663436854 -0400
-+++ openssh-9.8p1/sshconnect.c	2024-07-25 14:39:29.270417597 -0400
-@@ -1593,12 +1593,8 @@
+diff -ru openssh-10.2p1.orig/sshconnect.c openssh-10.2p1/sshconnect.c
+--- openssh-10.2p1.orig/sshconnect.c	2026-01-18 10:27:10.595569950 -0500
++++ openssh-10.2p1/sshconnect.c	2026-01-18 10:35:43.651555969 -0500
+@@ -1594,12 +1594,8 @@
      const struct ssh_conn_info *cinfo)
  {
  	char *host;
@@ -268,17 +263,21 @@ diff -u openssh-9.8p1.orig/sshconnect.c openssh-9.8p1/sshconnect.c
  	/* Convert the user-supplied hostname into all lowercase. */
  	host = xstrdup(orighost);
  	lowercase(host);
-@@ -1612,11 +1608,11 @@
+@@ -1614,15 +1610,15 @@
  
  	/* key exchange */
  	/* authenticate user */
 -	debug("Authenticating to %s:%d as '%s'", host, port, server_user);
  	ssh_kex2(ssh, host, hostaddr, port, cinfo);
+ 	if (!options.kex_algorithms_set && ssh->kex != NULL &&
+ 	    ssh->kex->name != NULL && options.warn_weak_crypto &&
+ 	    !kex_is_pq_from_name(ssh->kex->name))
+ 		warn_nonpq_kex();
 -	ssh_userauth2(ssh, local_user, server_user, host, sensitive);
 -	free(local_user);
  	free(host);
 +
-+	/* Exit after key exchange. No authentication. */
++	/* Exit after key exchange, stopping before authentication. */
 +	exit(0);
  }
  

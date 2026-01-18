@@ -1,8 +1,8 @@
-FROM alpine:3.21 AS build
+FROM alpine:3.23 AS build
 WORKDIR /usr/local/src/ssh
 COPY resources/openssh.patch .
-RUN OPENSSH_VERSION='9.9p2' && \
-    ARCHIVE_SHA_256='91aadb603e08cc285eddf965e1199d02585fa94d994d6cae5b41e1721e215673' && \
+RUN OPENSSH_VERSION='10.2p1' && \
+    ARCHIVE_SHA_256='ccc42c0419937959263fa1dbd16dafc18c56b984c03562d2937ce56a60f798b2' && \
     apk add --virtual .build-deps \
       build-base curl libressl-dev linux-headers zlib-dev && \
     curl -s -S -L -O "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VERSION}.tar.gz" && \
@@ -30,10 +30,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=resources/pyproject.toml,target=pyproject.toml \
     uv sync --locked --no-install-project --no-dev
 
-FROM alpine:3.21
+FROM alpine:3.23
 ENV PYTHONUNBUFFERED=1
 ENV LANG=C.UTF-8
-RUN apk add --no-cache bash libressl4.0-libcrypto tini
+RUN apk add --no-cache bash libressl4.2-libcrypto tini
 ARG UID=65532
 ARG GID=65532
 RUN addgroup -g "$GID" -S app && adduser -u "$UID" -G app -S app
@@ -48,4 +48,4 @@ COPY --chown=app:app resources/configs/ configs/
 ENV PATH="/app/.venv/bin:$PATH"
 USER app
 VOLUME /logs
-ENTRYPOINT ["/sbin/tini", "--", "bash", "ssh-weak-dh-test.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "./ssh-weak-dh-test.sh"]
