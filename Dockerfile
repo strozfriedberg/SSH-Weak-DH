@@ -38,9 +38,9 @@ ARG UID=65532
 ARG GID=65532
 RUN addgroup -g "$GID" -S app && adduser -u "$UID" -G app -S app
 WORKDIR /app
-COPY --from=build --chown=app:app /usr/local/src/dh-groups/common.json .
-COPY --from=build --chown=app:app /usr/local/bin/ssh .
 COPY --from=build /python /python
+COPY --from=build /usr/local/src/dh-groups/common.json .
+COPY --from=build /usr/local/bin/ssh .
 COPY --from=build --chown=app:app /app/.venv .venv
 COPY --chown=app:app resources/ssh-weak-dh-analyze.py .
 COPY --chown=app:app resources/ssh-weak-dh-test.sh .
