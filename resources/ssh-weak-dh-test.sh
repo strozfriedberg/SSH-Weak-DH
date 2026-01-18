@@ -84,7 +84,7 @@ main() {
   echo 'Analysis of results:'
   echo
 
-  "$SSH_WEAK_DH_ANALYZE" "$out_prefix"
+  exec "$SSH_WEAK_DH_ANALYZE" "$out_prefix"
 }
 
 main "$@"
