@@ -18,12 +18,12 @@ RUN OPENSSH_VERSION='9.9p2' && \
     mv ssh /usr/local/bin/
 WORKDIR /usr/local/src/dh-groups
 RUN curl -s -S -L -O 'https://raw.githubusercontent.com/cryptosense/diffie-hellman-groups/04610a10e13db3a69c740bebac9cb26d53c520d3/gen/common.json'
-COPY --from=ghcr.io/astral-sh/uv:0.7 /uv /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /bin/
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 ENV UV_PYTHON_INSTALL_DIR=/python
 ENV UV_PYTHON_PREFERENCE=only-managed
-RUN uv python install 3.13
+RUN uv python install 3.14
 WORKDIR /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=resources/uv.lock,target=uv.lock \
@@ -33,9 +33,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM alpine:3.21
 ENV PYTHONUNBUFFERED=1
 ENV LANG=C.UTF-8
-RUN apk add --no-cache bash libressl4.0-libcrypto
-ARG UID=1000
-ARG GID=1000
+RUN apk add --no-cache bash libressl4.0-libcrypto tini
+ARG UID=65532
+ARG GID=65532
 RUN addgroup -g "$GID" -S app && adduser -u "$UID" -G app -S app
 WORKDIR /app
 COPY --from=build --chown=app:app /usr/local/src/dh-groups/common.json .
@@ -48,4 +48,4 @@ COPY --chown=app:app resources/configs/ configs/
 ENV PATH="/app/.venv/bin:$PATH"
 USER app
 VOLUME /logs
-ENTRYPOINT ["bash", "ssh-weak-dh-test.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "bash", "ssh-weak-dh-test.sh"]

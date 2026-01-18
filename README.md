@@ -19,18 +19,20 @@ For the original blog post, visit
 # Installation
 
 1. Install Podman or Docker.
-2. Run one of the following commands:
+2. Run one of the following commands to build the container image:
 ```shell
-podman build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t ssh-weak-dh .
+podman build -t ssh-weak-dh .
 docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t ssh-weak-dh .
 ```
 
 # Usage
 
+## Scan
+
 Run one of the following commands:
 ```shell
-podman run --userns=keep-id --rm -v "$(pwd)/logs/":/logs/ ssh-weak-dh host [port]
-docker run --rm -v "$(pwd)/logs/":/logs/ ssh-weak-dh host [port]
+podman run --userns=keep-id:uid=65532,gid=65532 --name ssh-weak-dh --rm -v "$(pwd)/logs/":/logs/ ssh-weak-dh host [port]
+docker run --name ssh-weak-dh --rm -v "$(pwd)/logs/":/logs/ ssh-weak-dh host [port]
 ```
 - `host`: Hostname or IP address of the SSH server.
 - `port`: Optional SSH server port (default is `22`).
@@ -41,17 +43,30 @@ Scan results will be printed to stdout. Detailed results are saved in the
 The scan tool calls the script `ssh-weak-dh-analyze.py` to analyze the scan
 results stored in the aforementioned subfolder.
 
-This analysis script is a standalone tool that can be run as follows:
+## Scan Result Analysis
+
+The analysis script is a standalone tool that can be run as follows:
 ```shell
 # Get a container shell:
-podman run --userns=keep-id --rm -v "$(pwd)/logs/":/logs/ -it --entrypoint bash ssh-weak-dh
-docker run --rm -v "$(pwd)/logs/":/logs/ -it --entrypoint bash ssh-weak-dh
+podman run --userns=keep-id:uid=65532,gid=65532 --name ssh-weak-dh --rm -v "$(pwd)/logs/":/logs/ -it --entrypoint bash ssh-weak-dh
+docker run --name ssh-weak-dh --rm -v "$(pwd)/logs/":/logs/ -it --entrypoint bash ssh-weak-dh
 
 # Run the analysis script on logged scan results:
 ./ssh-weak-dh-analyze.py /logs/scanme.example.com-22/
 ```
 
-# Copyright
+## Stop
 
-Fabian Foerg, Gotham Digital Science, 2015-2025
+Stop a running container:
+```shell
+podman stop ssh-weak-dh
+docker stop ssh-weak-dh
+```
+
+# License
+
+This project is licensed under the GNU General Public License v2.0.
+See [LICENSE](LICENSE) for details.
+
+Copyright (C) 2015-2026 Fabian Foerg / Gotham Digital Science
 
