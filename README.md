@@ -43,7 +43,7 @@ Scan results will be printed to stdout. Detailed results are saved in the
 The scan tool calls the script `ssh-weak-dh-analyze.py` to analyze the scan
 results stored in the aforementioned subfolder.
 
-## Scan Result Analysis
+## Analyze Scan Results
 
 The analysis script is a standalone tool that can be run as follows:
 ```shell
