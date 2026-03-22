@@ -18,7 +18,7 @@ RUN OPENSSH_VERSION='10.2p1' && \
     mv ssh /usr/local/bin/
 WORKDIR /usr/local/src/dh-groups
 RUN curl -s -S -L -O 'https://raw.githubusercontent.com/cryptosense/diffie-hellman-groups/04610a10e13db3a69c740bebac9cb26d53c520d3/gen/common.json'
-COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10 /uv /bin/
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
 ENV UV_PYTHON_INSTALL_DIR=/python
